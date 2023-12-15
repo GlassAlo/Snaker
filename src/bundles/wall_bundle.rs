@@ -2,7 +2,7 @@ use std::fs::File;
 
 use bevy::{
     asset::AssetServer,
-    ecs::{bundle::Bundle, system::Res},
+    ecs::{bundle::Bundle, component::Component, system::Res},
     math::{Quat, Vec3},
     prelude::default,
     sprite::SpriteBundle,
@@ -12,14 +12,12 @@ use serde::Deserialize;
 
 use crate::{
     components::{collider::Collider, entity_type::EntityType},
-    utils::{direction::Direction, position::Position},
+    utils::{direction::Direction, position::Position, texture::Asset},
 };
 
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct WallData {
-    asset: String,
-    scale: f32,
+#[derive(Deserialize, Component)]
+pub(crate) struct WallData {
+    pub(crate) asset: Asset,
 }
 
 #[derive(Bundle)]
@@ -27,6 +25,7 @@ pub(crate) struct WallBundle {
     sprite_bundle: SpriteBundle,
     entity_type: EntityType,
     collider: Collider,
+    pub(crate) data: WallData,
 }
 
 impl WallBundle {
@@ -39,17 +38,18 @@ impl WallBundle {
         let json: WallData = serde_json::from_reader(file).expect("file should be proper JSON");
         Self {
             sprite_bundle: SpriteBundle {
-                texture: asset_server.load(&json.asset),
+                texture: asset_server.load(&json.asset.texture),
                 transform: Transform {
                     translation: Vec3::new(position.x as f32, position.y as f32, 0.0),
                     rotation: Quat::from_rotation_z(direction.rotation_angle().to_radians()),
-                    scale: Vec3::new(json.scale, json.scale, 0.2),
+                    scale: Vec3::new(json.asset.scale, json.asset.scale, json.asset.scale),
                     ..default()
                 },
                 ..default()
             },
             entity_type: EntityType::Wall,
             collider: Collider,
+            data: json,
         }
     }
 }

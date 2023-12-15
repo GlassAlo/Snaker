@@ -1,0 +1,26 @@
+{
+    "asset_normal": {
+        "texture": "player/Faker_Head.png",
+        "size": {
+            "width": 1000,
+            "height": 750
+        },
+        "scale": 0.1
+    },
+    "asset_collect": {
+        "texture": "player/Faker_silent.png",
+        "size": {
+            "width": 2048,
+            "height": 1366
+        },
+        "scale": 0.1
+    },
+    "asset_win": {
+        "texture": "player/Faker.png",
+        "size": {
+            "width": 991,
+            "height": 820
+        },
+        "scale": 0.1
+    }
+}
